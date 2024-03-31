@@ -1,4 +1,5 @@
-zconst express = require("express");
+const express = require("express");
+const router = express.Router();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -14,19 +15,29 @@ const port = process.env.PORT || 4000;
 const dbURL = process.env.DB_URL;
 
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:3001', 
-  credentials: true 
-}));
+
+
+/*const corsConfig = {
+  origin: "*", 
+  credentials: true ,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+
+};
+
+app.options("", cors(corsConfig));*/
+
+app.use(cors());
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false}));
+
 
 
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
-app.use("/", authRoute);
+app.use("/auth", authRoute);
 app.use("/profile", profileRoute);
 app.use("/users",workoutRoute);
 
